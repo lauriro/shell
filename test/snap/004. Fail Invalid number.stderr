@@ -1,0 +1,2 @@
+./test/damm.sh: 13: Illegal number: a
+Fail 1a2 != 1a
