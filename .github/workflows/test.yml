@@ -5,5 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: shellcheck -e SC2308 ./*.sh
+    - run: shellcheck ./*.sh
     - run: ./test/damm.sh

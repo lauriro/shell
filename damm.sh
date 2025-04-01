@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2308
 #
 #- Damm check digit algorithm to detect all single-digit errors and all adjacent transposition errors
 #-

@@ -1,13 +1,15 @@
 #!/bin/sh
+# shellcheck disable=SC2145,SC2059,SC2015
 
 LANG=C
 SUB=$1
 
-export TMP=$(mktemp -d)
+TMP=$(mktemp -d)
+export TMP
 
 SNAP=./snap
 
-: ${PASS:=0} ${FAIL:=0} ${SYNC:=0} ${SEQ:=1000}
+: "${PASS:=0} ${FAIL:=0} ${SYNC:=0} ${SEQ:=1000}"
 
 red="\033[31m"
 green="\033[32m"
@@ -29,12 +31,12 @@ die() {
 
 bye() {
 	OUT="${green}${bold}PASS:%s${reset} FAIL:%s"
-	[ $FAIL -gt 0 ] && OUT="PASS:%s ${red}${bold}FAIL:%s${reset}"
-	printf "\n$OUT\n\n" $PASS $FAIL
+	[ "$FAIL" -gt 0 ] && OUT="PASS:%s ${red}${bold}FAIL:%s${reset}"
+	printf "\n$OUT\n\n" "$PASS" "$FAIL"
 	times
-	rm -rf $TMP
+	rm -rf "$TMP"
 	[ "$SUB" = "up" ] && git add $SNAP/
-	exit $FAIL
+	exit "$FAIL"
 }
 
 trap "bye" 0 1 2 3 6 15
@@ -59,7 +61,7 @@ Test() {
 Fail() {
 	EXIT=$1
 	shift
-	assert $EXIT "Fail $@"
+	assert "$EXIT" "Fail $@"
 }
 
 assert() {
@@ -68,7 +70,7 @@ assert() {
 	NAME="${SEQ#?}. $2"
 	LINE=$OK
 	shift 2
-	$@ >"$TMP/$NAME.stdout" 2>"$TMP/$NAME.stderr"
+	"$@" >"$TMP/$NAME.stdout" 2>"$TMP/$NAME.stderr"
 	_EXIT=$?
 	Check "$NAME.stderr" ""
 	Check "$NAME.stdout" ""
@@ -76,7 +78,7 @@ assert() {
 	printf "$LINE %s\n" "$NAME"
 
 	[ "$SUB" = "debug" ] && {
-		echo "\$ $@"
+		printf "\$ %s\n" "$*"
 		cat "$TMP/$NAME.stdout" "$TMP/$NAME.stderr"
 		sleep 1
 	}
