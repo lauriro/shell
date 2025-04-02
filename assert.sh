@@ -7,7 +7,8 @@ SUB=$1
 TMP=$(mktemp -d)
 export TMP
 
-SNAP=./snap
+SNAP="./snap/${0##*/}"
+SNAP=${SNAP%.*}
 
 : "${PASS:=0} ${FAIL:=0} ${SYNC:=0} ${SEQ:=1000}"
 
@@ -20,7 +21,7 @@ bold="\033[1m"
 ERR="^^^\n  ${red}✘${reset}"
 OK="  ${green}✔${reset} %s"
 
-[ "$SUB" = "up" ] && ERR="  ${yellow}ℹ${reset}" && mkdir -p $SNAP && rm $SNAP/*
+[ "$SUB" = "up" ] && ERR="  ${yellow}ℹ${reset}" && mkdir -p "$SNAP" && rm "$SNAP"/*
 
 printf "Test '%s' in '%s'\n" "$0" "$TMP"
 
@@ -35,7 +36,7 @@ bye() {
 	printf "\n$OUT\n\n" "$PASS" "$FAIL"
 	times
 	rm -rf "$TMP"
-	[ "$SUB" = "up" ] && git add $SNAP/
+	[ "$SUB" = "up" ] && git add "$SNAP/"
 	exit "$FAIL"
 }
 
